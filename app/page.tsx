@@ -1,101 +1,180 @@
-import Image from "next/image";
+"use client";
+/* eslint-disable @next/next/no-img-element */
+import React, { useContext, useRef, useState, useEffect } from "react";
+import Link from "next/link";
+import { StyleClass } from "primereact/styleclass";
+import { Button } from "primereact/button";
+import { Ripple } from "primereact/ripple";
+import { Divider } from "primereact/divider";
+import { classNames } from "primereact/utils";
+import FeatureCard from "../components/FeatureCard";
+import { FeatureService } from "../service/FeatureService";
+import WizeObserverAction from "../components/WizeObserverAction";
+import WizeProduct from "../components/WizeProduct";
+import WizeSafeguard from "../components/WizeSafeguard";
+import WizeSolution from "../components/WizeSolution";
+import WizeChallenge from "../components/WizeChallenge";
+import WizeFooter from "../components/WizeFooter";
+import WizeContactForm from "../components/WizeContactForm";
+import WizeFAQ from "../components/WizeFAQ";
 
-export default function Home() {
+
+import Icon from "../components/Icon";
+
+import { TreeNode } from "primereact/treenode";
+
+const Home = () => {
+  const [isHidden, setIsHidden] = useState(false);
+  const menuRef = useRef<HTMLElement | null>(null);
+  const [features, setFeatures] = useState<TreeNode[]>([]);
+
+  const toggleMenuItemClick = () => {
+    setIsHidden((prevState) => !prevState);
+  };
+  useEffect(() => {
+    FeatureService.getFeatures().then((feature: any) => setFeatures(feature));
+  }, []);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="./next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="surface-0 flex justify-content-center">
+      <div id="home" className="landing-wrapper overflow-hidden">
+        <div className="py-4 px-4 mx-0 md:mx-6 lg:mx-6 lg:px-6 flex align-items-center justify-content-between relative lg:static">
+          <Link href="/" className="flex align-items-center">
+            <Icon name="app-logo" type="svg" />
+          </Link>
+          <StyleClass
+            nodeRef={menuRef as NodeRef}
+            selector="@next"
+            enterClassName="hidden"
+            leaveToClassName="hidden"
+            hideOnOutsideClick
           >
-            <Image
-              className="dark:invert"
-              src="./vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <i
+              ref={menuRef}
+              className="pi pi-bars text-4xl cursor-pointer block lg:hidden text-700"
+            ></i>
+          </StyleClass>
+          <div
+            className={classNames(
+              "align-items-center surface-0 flex-grow-1 justify-content-between hidden lg:flex absolute lg:static w-full left-0 px-6 lg:px-0 z-2",
+              { hidden: isHidden }
+            )}
+            style={{ top: "100%" }}
           >
-            Read our docs
-          </a>
+            <ul className="list-none p-0 m-0 flex-grow-1 justify-content-center flex lg:align-items-center select-none flex-column lg:flex-row cursor-pointer">
+              <li>
+                <a
+                  href="#home"
+                  onClick={toggleMenuItemClick}
+                  className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
+                >
+                  <span>Home</span>
+                  <Ripple />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#highlights"
+                  onClick={toggleMenuItemClick}
+                  className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
+                >
+                  <span>About</span>
+                  <Ripple />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#features"
+                  onClick={toggleMenuItemClick}
+                  className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
+                >
+                  <span>Features</span>
+                  <Ripple />
+                </a>
+              </li>
+            </ul>
+            <div className="flex justify-content-between lg:block border-top-1 lg:border-top-none surface-border py-3 lg:py-0 mt-3 lg:mt-0">
+              {/* <Button label="Login" text rounded className="border-none font-light line-height-2 text-blue-500"></Button> */}
+              <Button
+                label="Contact Us"
+                rounded
+                className="border-none px-3 py-2 ml-5 font-light line-height-2 app-primary flex align-items-center justify-content-center text-white"
+              ></Button>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        <div
+          id="hero"
+          className="flex app-bg-secondary flex-column  p-7 lg:px-8 overflow-hidden"
         >
-          <Image
-            aria-hidden
-            src="./file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="./window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="./globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <div className="flex align-items-center justify-content-center md:flex-row flex-column-reverse">
+            <div className="pr-6">
+              <h1 className="text-7xl line-height-1 text-white">
+                Real-time Theft Detection with AI Powered Wize Observer
+              </h1>
+              <p className="font-normal text-2xl line-height-3 my-5 text-white">
+                Sed blandit libero volutpat sed cras. Fames ac turpis egestas
+                integer. Placerat in egestas erat...{" "}
+              </p>
+              <Button
+                type="button"
+                label="Book a Demo Now"
+                rounded
+                className="bg-white text-gray-900 text-xl border-none flex align-items-center justify-content-center font-normal line-height-3 py-2 px-4 "
+              ></Button>
+            </div>
+           <div className="theaction">
+                {/* <img
+                    src="/images/landing/theft-gif.gif"
+                    alt="Hero Image"
+                    className=" theft-action"
+                /> */}
+           </div>
+          </div>
+        </div>
+        <div id="challenge" className="pt-4 px-4 lg:px-4 my-2 md:my-4">
+          <WizeChallenge />
+        </div>
+        <div id="solution" className="pb-4 px-6  my-2 md:my-4">
+          <WizeSolution />
+        </div>
+        <div>
+          <WizeObserverAction />
+        </div>
+        <div id="features" className="py-4 px-4 lg:px-8 mt-5 mx-0">
+          <div className="grid justify-content-center">
+            <div className="col-12 text-center mt-4 mb-4">
+              <h2 className="text-900 text-bold text-5xl mb-2">Key Features</h2>
+            </div>
+            {features.map((feature, index) => (
+              <div
+                className="col-12 md:col-12 lg:col-4  mt-4 lg:mt-0"
+                key={index}
+              >
+                <FeatureCard data={feature} />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div id="highlights " className="mb-7">
+          <WizeProduct />
+        </div>
+        <div id="safeguard" className="py-4 px-4 lg:px-8 my-2 md:my-4">
+          <WizeSafeguard />
+        </div>
+        <div>
+          <WizeFAQ/>
+        </div>
+        <div>
+          <WizeContactForm/>
+        </div> 
+        <div className="">
+          <WizeFooter />
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default Home;
